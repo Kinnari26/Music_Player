@@ -1,0 +1,199 @@
+<?php
+    session_start();    
+    @$conn=@mysqli_connect("localhost","root","","db_project");
+    @$ins="SELECT * FROM tb_song";
+    $result=@mysqli_query($conn,$ins);
+    while($value=mysqli_fetch_array($result))
+    {
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Songs</title>
+    </head>
+    <body>
+        <a href="demo.php?l=<?php echo $value['loc']?>&a=<?php echo $value['artist']?>&s=<?php echo $value['song_name']?>"><h2><?php echo $value['song_name'];?>--><?php echo $value['artist'];?></h2>
+        </audio>
+    </body>
+    <?php } ?>
+</html>
+---------------------------------------------------------------------
+displaying artist
+<?php
+    @$conn=@mysqli_connect("localhost","root","","db_project");
+    @$ins="SELECT * FROM tb_artist";
+    @$result=@mysqli_query($conn,$ins);
+    while($value=@mysqli_fetch_array($result))
+    {
+?>
+<html>
+    <body>
+        <table>
+            <tr>
+                <td><a href="audio.php?aid=<?php echo $value['artist_id'];?>"><?php echo $value['artist_name'];?></a></td>
+            </tr>
+        </table>
+        <?php } ?>
+    </body>
+</html>
+-----------------------------------------------------------------------
+?a=<?php echo $value['artist_id'];?>&l=<?php echo $value['loc'];?>&s=<?php echo $value['song_name'];?
+------------------------------------------------------------------------
+<?php
+    session_start();      
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="login_style.css">
+        <title>Login</title>
+    </head>
+    <body>
+        <div class="container">
+        <form action="" method="POST">
+            <input type="email" name="txtemail" id="" placeholder="Enter Username"><br><br>
+            <input type="password" name="txtpass" id="" placeholder="Enter Password"><br><br>
+            <input type="submit" value="Submit">
+            <input type="reset" value="Cancel">
+        </form>
+</div>
+    </body>
+</html>
+<?php
+    @$mail=$_POST['txtemail'];
+    @$pass=$_POST['txtpass'];
+
+    @$conn=@mysqli_connect("localhost","root","","db_project");
+    @$ins="SELECT * FROM tb_users WHERE email='$mail' AND password='$pass'";
+    @$result=@mysqli_query($conn,$ins);
+    @$value=@mysqli_fetch_array($result);
+
+    if($value['user_id']>0)
+    {
+	$_SESSION['id']=$value['user_id'];
+        $_SESSION['m']=$mail;
+        $_SESSION['p']=$pass;
+        
+        header("location:first_page.php");
+        exit;
+    }
+	else
+	{
+		echo "<h2 display=none>No Account Found</h2>";
+	}
+?>
+----------------------------------------------------------------------
+<!DOCTYPE html>
+<head>
+	<title>Registration-Page</title>
+	<style>
+		body
+		{
+			background-color:black;
+		}
+		.item1
+		{
+    			background-color: #1db954;
+    			padding:20px;
+    			transform: translate(300px,10px);
+    			border-radius: 6px;
+    			position: fixed;  /*Stay in place */
+    			z-index: 1; /* Sit on top */
+    			left: 0;
+    			top: 0;
+    			width: 900px; /* Full width */
+    			height: 900px; /* Full height */
+    			overflow: scroll; /* Enable scroll if needed */
+   			padding-top: 20px;
+		}
+
+		.heading
+		{
+			transform:translate(5px,-30px);
+    			margin-bottom:10px;
+    			text-align: center;
+    			font-size: 40px;
+		}
+		.textbox
+		{
+			transform:translate(5px,-35px); 	
+   			 width: 100%;
+    			padding: 12px 20px;
+    			margin: 20px 0;
+    			display: inline-block;
+    			border: 1px solid #ccc;
+    			box-sizing: border-box;
+    			font-size:26px;
+		}
+		.button
+		{
+    			background-color: black;
+    			color: white;
+			padding:12px 2px;
+    			border: none;
+    			cursor: pointer;
+    			width: 50%;
+    			font-size:20px;
+			display:inline;
+			transform:translate(200px,-25px);
+		}
+		.button:hover{
+    			background-color: transparent;
+    			border:1px solid black;
+		}
+		.log_out
+		{
+			color:red;
+		}
+	</style>
+</head>
+<!--<div class="item1"  id="login_modal">--> 
+    <h1 class="heading">Registration</h1>
+        <form action="#" method="POST">
+            <!--<input type="text" name="txtname" placeholder="Enter FullName" class="textbox" required><br> 
+		<input type="text" name="txtcon" placeholder="Enter Contact Number" class="textbox" maxlength="10" required><br>--> 
+	    <input type="email" name="txtemail" placeholder="Enter Email" class="textbox" required><br> 
+            <input type="text" name="txtpass" placeholder="Enter Password" class="textbox" required><br>
+	<!--<input type="password" name="txtconpass" placeholder="Confirm Password" class="textbox" required><br>-->
+            <input type="submit" value="Register" class="button">
+        </form>
+          <!--</div>--></a>
+</html>
+<?php
+	@$e=$_POST['txtemail'];
+	@$p=$_POST['txtpass'];
+
+	@$conn=@mysqli_connect("localhost","root","","db_project");
+	$insert = "insert into tb_users(email,password) values('$e','$p')";
+	@$result=@mysqli_query($conn,$ins);
+	if($result)
+	{
+		echo "<h2 style='color:white'>","inserted","</h2>";
+	}
+	else
+	{
+		echo "<h2 style='color:white'>","Failed","</h2>";		
+	}
+?>
+--------------------------------------------------------------------------
+<?php	
+	session_start();
+   @$conn=@mysqli_connect("localhost","root","","db_project");
+   @$ins="SELECT * FROM tb_songs";
+   @$result=@mysqli_query($conn,$ins);
+   while($value=@mysqli_fetch_array($result))
+   {
+?>
+<html>
+    <table border="1px solid black" cellspacing="13"> 
+        <tr>
+            <td>
+                <a href="demo.php?a=<?php echo $value['artist_id'];?>&l=<?php echo $value['loc'];?>&s=<?php echo $value['song_name'];?>"><?php echo $value['song_name'];?></a>
+            </td>
+		<td><a href="play_demo2.php?a=<?php echo $value		['artist_id'];?>&l=<?php echo $value['loc'];?>&s=<?php echo $value['song_name'];?>"">Add To Playlist</a></td>
+           	 </td>
+        </tr>
+    </table>
+    <?php } ?>
+</html>
+
